@@ -1,6 +1,5 @@
 import axios from 'axios';
-import React, { Fragment, useEffect, useState, useRef } from 'react';
-import logo from './logo.svg';
+import React, { useEffect, useState, useRef } from 'react';
 import './App.css';
 
 
@@ -131,13 +130,13 @@ function App() {
 
     return sortItems.map((value) => {
       // keyが無ければ新しく作り、あれば既存のkey文字列を返す
-      const key = state.keys.get(`item_${value.blockId}`) || Math.random().toString(16);
+      const key = state.keys.get(`item_${value.language_id}`) || Math.random().toString(16);
 
       // 生成したkey文字列を保存
-      state.keys.set(`item_${value.blockId}`, key);
+      state.keys.set(`item_${value.language_id}`, key);
 
-      if (!state.sortIds.includes(value.blockId)) {
-        state.sortIds.push(value.blockId);
+      if (!state.sortIds.includes(value.language_id)) {
+        state.sortIds.push(value.language_id);
       }
 
       return {
@@ -160,7 +159,6 @@ function App() {
             const { left: x, top: y } = block.getBoundingClientRect();
             const position = { x, y };
 
-            console.log('key', key);
             const itemIndex = dndItems.findIndex((item) => item.key === key);
 
             // 要素が無ければ新しく追加して処理を終わる
@@ -227,14 +225,11 @@ function App() {
             const { left: x, top: y } = element.getBoundingClientRect();
             const position = { x, y };
 
-            // ドラッグする要素を保持しておく
-            state.dragElement = { key, value, element, position };
+            state.dragElement =  { key, value, element, position };
 
-            // mousedownイベントで変化したuseStateをstateに反映
-            state.dndItems.forEach((item, i) => {
-              item.value = blocks[i];
-            });
-
+            console.log('No value is stored in dragElement.')
+            console.log('onMouseDown', {key, value, element, position});
+            console.log('state', state);
             // mousemove, mouseupイベントをwindowに登録する
             window.addEventListener('mouseup', onMouseUp);
             window.addEventListener('mousemove', onMouseMove);
@@ -254,14 +249,18 @@ function App() {
 
   return (
     <ul className="App">
-      {blocks.map((block,i) => (
+      {sortBlocks(blocks).map((block,i) => {
 
-        <li key={i} className="block">
+      const { language } = block.value;
+
+      return (
+      <li key={i} className="block">
           <div className="panel-body" {...block.events}>
-            {block.language}
+            {language}
           </div>
         </li>
-      ))}
+      )
+      })}
     </ul>
   );
 }

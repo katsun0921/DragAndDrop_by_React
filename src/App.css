@@ -1,8 +1,17 @@
 .block {
   text-align: center;
+  background-color: #fff;
+}
+
+.block:nth-child(2n) {
+  /* 表の偶数行のみを対象に装飾するCSS */
+  background-color: #ccc;
+}
+
+.panel-body {
   border-top: 1px solid #eee;
   border-bottom: 1px solid #eee;
-  padding: 10px
+  padding: 10px;
 }
 
 .block:not(:last-of-type) {
